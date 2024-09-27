@@ -1,10 +1,9 @@
-'use client';  // Use this to mark the file as a Client Component
+'use client';  
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';  // Use next/navigation for router
+import { useRouter } from 'next/navigation'; 
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';  // Import your Firebase configuration
-
+import { auth } from '../../firebase';  
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +14,7 @@ export default function Login() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('Logged in:', userCredential.user);
-      router.push('/home');  // Redirect to home page after login
+      router.push('/home');  
     } catch (error) {
       console.error('Error logging in:', error.message);
     }
@@ -97,3 +96,5 @@ const buttonStyle = {
 buttonStyle[':hover'] = {
   backgroundColor: '#2ecc71',  // Slightly lighter green on hover
 };
+
+// ref: chatgpt - ' add similar styles as in signup screen'
