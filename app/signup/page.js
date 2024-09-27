@@ -1,10 +1,10 @@
-'use client';  // Use this to mark the file as a Client Component
+'use client'; 
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';  // Use next/navigation for router
+import { useRouter } from 'next/navigation';  
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../../firebase';  // Import Firebase configuration, including Firestore
-import { doc, setDoc } from 'firebase/firestore';  // Firestore methods to store user data
+import { auth, db } from '../../firebase';  
+import { doc, setDoc } from 'firebase/firestore';  
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -69,11 +69,11 @@ export default function SignUp() {
   );
 }
 
-// Style for the overall container
+
 const containerStyle = {
   textAlign: 'center',
   marginTop: '50px',
-  backgroundColor: '#f7f9fc', // Light grey-blue background
+  backgroundColor: '#f7f9fc', 
   padding: '40px',
   borderRadius: '10px',
   width: '400px',
@@ -81,34 +81,33 @@ const containerStyle = {
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 };
 
-// Style for the title
 const titleStyle = {
-  color: '#2c3e50',  // Dark grey for title
+  color: '#2c3e50',  
   fontSize: '2rem',
   marginBottom: '20px',
 };
 
-// Style for the form
+
 const formStyle = {
   textAlign: 'center',
 };
 
-// Style for the input fields
+
 const inputStyle = {
   padding: '10px',
   margin: '10px',
   fontSize: '1.2rem',
   width: '80%',
   borderRadius: '5px',
-  border: '1px solid #bdc3c7',  // Light grey border
-  backgroundColor: '#ecf0f1',  // Soft grey background
+  border: '1px solid #bdc3c7',  
+  backgroundColor: '#ecf0f1',  
 };
 
-// Style for the button
+
 const buttonStyle = {
   padding: '10px 20px',
   fontSize: '1.2rem',
-  backgroundColor: '#27ae60',  // Green color
+  backgroundColor: '#27ae60',  
   color: 'white',
   border: 'none',
   cursor: 'pointer',
@@ -117,5 +116,7 @@ const buttonStyle = {
 };
 
 buttonStyle[':hover'] = {
-  backgroundColor: '#2ecc71',  // Slightly lighter green on hover
+  backgroundColor: '#2ecc71',  
 };
+
+//ref: chatgpt - 'how to set gmail signup with firebase'
