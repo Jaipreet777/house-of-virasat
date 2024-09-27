@@ -92,3 +92,6 @@ body {
      bottom: -4px;
      left: 20px;
 }
+#hero{
+  background-image: url("images/hero4.jpg");
+}
