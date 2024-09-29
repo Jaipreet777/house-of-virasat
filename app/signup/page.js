@@ -73,12 +73,10 @@ export default function SignUp() {
 const containerStyle = {
   textAlign: 'center',
   marginTop: '50px',
-  backgroundColor: '#f7f9fc', 
   padding: '40px',
   borderRadius: '10px',
   width: '400px',
   margin: 'auto',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 };
 
 const titleStyle = {
