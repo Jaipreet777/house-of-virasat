@@ -50,12 +50,10 @@ export default function Login() {
 const containerStyle = {
   textAlign: 'center',
   marginTop: '100px',
-  backgroundColor: '#f7f9fc', // Light grey-blue background
   padding: '40px',
   borderRadius: '10px',
   width: '400px',
   margin: 'auto',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 };
 
 // Style for the title
