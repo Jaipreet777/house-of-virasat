@@ -1,4 +1,4 @@
-'use client';  // Use this to mark the file as a Client Component
+'use client';  // Ensure this is a Client Component
 
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
@@ -12,7 +12,9 @@ export default function Home() {
   const [cart, setCart] = useState([]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
+  const [showCart, setShowCart] = useState(false); // Cart modal visibility
 
+  // Fetch products from Firestore
   useEffect(() => {
     const fetchProducts = async () => {
       const querySnapshot = await getDocs(collection(db, 'products'));
@@ -26,6 +28,19 @@ export default function Home() {
 
     fetchProducts();
   }, []);
+
+  // Load cart from localStorage
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Save cart to localStorage when cart changes
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   // Handle search
   useEffect(() => {
@@ -53,6 +68,12 @@ export default function Home() {
   // Add to cart functionality
   const addToCart = (product) => {
     setCart([...cart, product]);
+  };
+
+  // Remove from cart functionality
+  const removeFromCart = (index) => {
+    const updatedCart = cart.filter((_, i) => i !== index);
+    setCart(updatedCart);
   };
 
   return (
@@ -107,14 +128,35 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Cart Icon */}
-      <div style={cartIconStyle}>
+      {/* Cart Button */}
+      <div style={cartIconStyle} onClick={() => setShowCart(!showCart)}>
         <span role="img" aria-label="cart">🛒</span> {cart.length} items
       </div>
+
+      {/* Cart Modal */}
+      {showCart && (
+        <div style={cartModalStyle}>
+          <h3>Your Cart</h3>
+          {cart.length === 0 ? (
+            <p>Your cart is empty.</p>
+          ) : (
+            cart.map((item, index) => (
+              <div key={index} style={cartItemStyle}>
+                <img src={item.imageUrl} alt={item.name} style={{ width: '50px' }} />
+                <p>{item.name}</p>
+                <p>${item.price}</p>
+                <button onClick={() => removeFromCart(index)} style={removeButtonStyle}>Remove</button>
+              </div>
+            ))
+          )}
+          <button onClick={() => setShowCart(false)} style={buttonStyle}>Close Cart</button>
+        </div>
+      )}
     </div>
   );
 }
 
+// Styling for the components
 const containerStyle = {
   textAlign: 'center',
   marginTop: '50px',
@@ -225,4 +267,34 @@ const cartIconStyle = {
   borderRadius: '50%',
   fontSize: '18px',
   color: '#fff',
+  cursor: 'pointer',
+};
+
+const cartModalStyle = {
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  backgroundColor: '#fff',
+  padding: '20px',
+  borderRadius: '10px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  width: '300px',
+  textAlign: 'center',
+};
+
+const cartItemStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '10px',
+};
+
+const removeButtonStyle = {
+  backgroundColor: '#e74c3c',
+  color: 'white',
+  border: 'none',
+  padding: '5px 10px',
+  borderRadius: '5px',
+  cursor: 'pointer',
 };
