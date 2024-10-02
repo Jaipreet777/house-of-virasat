@@ -29,19 +29,6 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  // Load cart from localStorage
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
-  }, []);
-
-  // Save cart to localStorage when cart changes
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-
   // Handle search
   useEffect(() => {
     const filtered = products.filter(product =>
@@ -119,7 +106,7 @@ export default function Home() {
       <div style={productGridStyle}>
         {filteredProducts.map((product) => (
           <div key={product.id} style={productCardStyle}>
-            <img src={product.imageUrl} alt={product.name} style={imageStyle} />
+            <img src={product.imageUrl} alt={product.name} style={imageStyle} /> {/* Display Image */}
             <h3 style={productTitleStyle}>{product.name}</h3>
             <p style={descriptionStyle}>{product.description}</p>
             <p style={priceStyle}>Price: ${product.price}</p>
