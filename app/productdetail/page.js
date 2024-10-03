@@ -1,8 +1,9 @@
+'use client';  // Ensure this is a Client Component
 
-'use client';  
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';  // Firebase Firestore reference
+import Link from 'next/link';  // Import Link for navigation
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -65,30 +66,26 @@ export default function Home() {
 
   return (
     <div style={containerStyle}>
-      {/* Small Cart Icon in Top Right */}
-      <div style={cartIconContainerStyle}>
-        <span style={cartItemCountStyle}>{cart.length}</span>
-        <span role="img" aria-label="cart" style={cartIconStyle}>🛒</span>
-      </div>
+      <h2 style={titleStyle}>House of Virasat</h2>
+      
+      {/* Search bar */}
+      <input
+        type="text"
+        placeholder="Search for products..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={searchBarStyle}
+      />
 
-      {/* Search and Sort Section */}
-      <div style={searchSortSectionStyle}>
-        <input
-          type="text"
-          placeholder="Search for products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={searchBarStyle}
-        />
-        <select value={sortOption} onChange={(e) => setSortOption(e.target.value)} style={selectStyle}>
-          <option value="">Sort by</option>
-          <option value="price-asc">Price (Low to High)</option>
-          <option value="price-desc">Price (High to Low)</option>
-          <option value="name-asc">Name (A to Z)</option>
-        </select>
-      </div>
+      {/* Sort options */}
+      <select value={sortOption} onChange={(e) => setSortOption(e.target.value)} style={selectStyle}>
+        <option value="">Sort by</option>
+        <option value="price-asc">Price (Low to High)</option>
+        <option value="price-desc">Price (High to Low)</option>
+        <option value="name-asc">Name (A to Z)</option>
+      </select>
 
-      {/* Price Filter */}
+      {/* Filter by Price Range */}
       <div style={priceFilterStyle}>
         <label style={labelStyle}>Min Price:</label>
         <input
@@ -107,19 +104,21 @@ export default function Home() {
       </div>
 
       {/* Product Grid */}
-      <h2 style={sectionTitleStyle}>New Arrivals</h2>
       <div style={productGridStyle}>
         {filteredProducts.map((product) => (
           <div key={product.id} style={productCardStyle}>
-            <img src={product.imageUrl} alt={product.name} style={imageStyle} /> {/* Display Image */}
-            <h3 style={productTitleStyle}>{product.name}</h3>
-            <p style={descriptionStyle}>{product.description}</p>
-            <p style={priceStyle}>Price: ${product.price}</p>
+            {/* Link to Product Detail Page */}
+            <Link href={/product/${product.id}} passHref>
+              <div>
+                <img src={product.imageUrl} alt={product.name} style={imageStyle} /> {/* Display Image */}
+                <h3 style={productTitleStyle}>{product.name}</h3>
+                <p style={priceStyle}>Price: ${product.price}</p>
+              </div>
+            </Link>
             <button onClick={() => addToCart(product)} style={buttonStyle}>Add to Cart</button>
           </div>
         ))}
       </div>
-
 
       {/* Cart Button */}
       <div style={cartIconStyle} onClick={() => setShowCart(!showCart)}>
@@ -151,123 +150,85 @@ export default function Home() {
 
 // Styling for the components
 const containerStyle = {
-  fontFamily: "'Roboto', sans-serif",
-  backgroundColor: '#f7f9fc',
-  color: '#333',
-  padding: '10px' , 
   textAlign: 'center',
-  minHeight: '100vh',
-  position: 'relative',
+  marginTop: '50px',
+  backgroundColor: '#f7f9fc',
+  padding: '20px',
 };
 
-const cartIconContainerStyle = {
-  position: 'absolute',
-  top: '20px',
-  right: '20px',
-  display: 'flex',
-  alignItems: 'center',
-};
-
-const cartIconStyle = {
-  fontSize: '28px',
-  cursor: 'pointer',
-  color: '#333',
-};
-
-const cartItemCountStyle = {
-  fontSize: '12px',
-  backgroundColor: '#e74c3c',
-  color: '#fff',
-  borderRadius: '50%',
-  padding: '5px 10px',
-  position: 'absolute',
-  top: '-10px',
-  right: '-10px',
-};
-
-const searchSortSectionStyle = {
-  margin: '40px 0',
-  display: 'flex',
-  justifyContent: 'center',
-  gap: '20px',
+const titleStyle = {
+  color: '#2c3e50',
+  fontSize: '2.5rem',
+  marginBottom: '20px',
 };
 
 const searchBarStyle = {
-  padding: '15px',
+  padding: '10px',
   fontSize: '16px',
-  width: '40%',
-  borderRadius: '30px',
+  width: '50%',
+  margin: '20px 0',
+  borderRadius: '5px',
   border: '1px solid #bdc3c7',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  backgroundColor: '#fff',
+  backgroundColor: '#ecf0f1',
 };
 
 const selectStyle = {
-  padding: '12px',
-  borderRadius: '30px',
+  padding: '10px',
+  marginLeft: '20px',
+  borderRadius: '5px',
   border: '1px solid #bdc3c7',
-  backgroundColor: '#fff',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  backgroundColor: '#ecf0f1',
 };
 
 const priceFilterStyle = {
-  marginBottom: '40px',
+  margin: '20px 0',
   display: 'flex',
   justifyContent: 'center',
-  gap: '20px',
+  alignItems: 'center',
 };
 
 const labelStyle = {
+  marginRight: '10px',
   fontSize: '16px',
-  color: '#333',
+  color: '#34495e',
 };
 
 const priceInputStyle = {
-  padding: '10px',
-  width: '80px',
-  borderRadius: '30px',
+  padding: '5px',
+  margin: '0 10px',
+  borderRadius: '5px',
   border: '1px solid #bdc3c7',
-  backgroundColor: '#fff',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-};
-
-const sectionTitleStyle = {
-  fontSize: '2rem',
-  marginBottom: '20px',
-  color: '#34495e',
+  backgroundColor: '#ecf0f1',
 };
 
 const productGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
   gap: '20px',
-  padding: '0 20px',
+  padding: '20px',
 };
 
 const productCardStyle = {
-  padding: '20px',
-  borderRadius: '15px',
-  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+  border: '1px solid #ddd',
+  padding: '15px',
+  borderRadius: '10px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   backgroundColor: '#fff',
-  transition: 'transform 0.3s ease',
+  transition: 'transform 0.3s',
+  cursor: 'pointer',
 };
 
 const imageStyle = {
   width: '100%',
-  height: 'auto',
+  height: '200px',
+  objectFit: 'cover',
   borderRadius: '10px',
 };
 
 const productTitleStyle = {
+  marginTop: '10px',
   fontSize: '1.2rem',
   color: '#2c3e50',
-  marginTop: '10px',
-};
-
-const descriptionStyle = {
-  fontSize: '1rem',
-  color: '#7f8c8d',
-  margin: '10px 0',
 };
 
 const priceStyle = {
@@ -277,25 +238,24 @@ const priceStyle = {
 };
 
 const buttonStyle = {
-  padding: '12px 25px',
+  padding: '10px 20px',
   backgroundColor: '#27ae60',
   color: 'white',
   border: 'none',
-  borderRadius: '30px',
   cursor: 'pointer',
-  transition: 'background-color 0.3s ease',
+  borderRadius: '5px',
+  transition: 'background-color 0.3s',
 };
 
-const footerStyle = {
-  backgroundColor: '#2c3e50',
-  padding: '20px',
-  textAlign: 'center',
-  marginTop: '40px',
-};
-
-const footerTextStyle = {
+const cartIconStyle = {
+  position: 'fixed',
+  bottom: '20px',
+  right: '20px',
+  backgroundColor: '#f39c12',
+  padding: '10px',
+  borderRadius: '50%',
+  fontSize: '18px',
   color: '#fff',
-  fontSize: '0.9rem',
   cursor: 'pointer',
 };
 
@@ -327,3 +287,5 @@ const removeButtonStyle = {
   borderRadius: '5px',
   cursor: 'pointer',
 };
+
+export default Home;
