@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';  // Import useRouter for navigation
 import { db } from '../../firebase';  // Firebase Firestore reference
-import Link from 'next/link';  // Import Link for navigation
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -14,6 +14,8 @@ export default function Home() {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
   const [showCart, setShowCart] = useState(false); // Cart modal visibility
+
+  const router = useRouter();  // Initialize useRouter for navigation
 
   // Fetch products from Firestore
   useEffect(() => {
@@ -64,6 +66,11 @@ export default function Home() {
     setCart(updatedCart);
   };
 
+  // Navigate to product detail screen
+  const goToProductDetail = (productId) => {
+    router.push(`/productDetail?id=${productId}`);  // Navigate to Product Detail screen with productId as a query param
+  };
+
   return (
     <div style={containerStyle}>
       <h2 style={titleStyle}>House of Virasat</h2>
@@ -106,16 +113,19 @@ export default function Home() {
       {/* Product Grid */}
       <div style={productGridStyle}>
         {filteredProducts.map((product) => (
-          <div key={product.id} style={productCardStyle}>
-            {/* Link to Product Detail Page */}
-            <Link href={/product/${product.id}} passHref>
-              <div>
-                <img src={product.imageUrl} alt={product.name} style={imageStyle} /> {/* Display Image */}
-                <h3 style={productTitleStyle}>{product.name}</h3>
-                <p style={priceStyle}>Price: ${product.price}</p>
-              </div>
-            </Link>
-            <button onClick={() => addToCart(product)} style={buttonStyle}>Add to Cart</button>
+          <div 
+            key={product.id} 
+            style={productCardStyle} 
+            onClick={() => goToProductDetail(product.id)}  // Navigate to product detail when clicked
+          >
+            <img src={product.imageUrl} alt={product.name} style={imageStyle} /> {/* Display Image */}
+            <h3 style={productTitleStyle}>{product.name}</h3>
+            <p style={descriptionStyle}>{product.description}</p>
+            <p style={priceStyle}>Price: ${product.price}</p>
+            <button onClick={(e) => { 
+              e.stopPropagation();  // Prevent parent onClick from triggering
+              addToCart(product); 
+            }} style={buttonStyle}>Add to Cart</button>
           </div>
         ))}
       </div>
@@ -220,8 +230,6 @@ const productCardStyle = {
 
 const imageStyle = {
   width: '100%',
-  height: '200px',
-  objectFit: 'cover',
   borderRadius: '10px',
 };
 
@@ -229,6 +237,12 @@ const productTitleStyle = {
   marginTop: '10px',
   fontSize: '1.2rem',
   color: '#2c3e50',
+};
+
+const descriptionStyle = {
+  fontSize: '1rem',
+  color: '#7f8c8d',
+  margin: '5px 0',
 };
 
 const priceStyle = {
@@ -287,5 +301,3 @@ const removeButtonStyle = {
   borderRadius: '5px',
   cursor: 'pointer',
 };
-
-export default Home;
