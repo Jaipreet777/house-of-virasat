@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';  // Firebase Firestore reference
+import Link from 'next/link';  // Import Link for navigation
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -106,10 +107,14 @@ export default function Home() {
       <div style={productGridStyle}>
         {filteredProducts.map((product) => (
           <div key={product.id} style={productCardStyle}>
-            <img src={product.imageUrl} alt={product.name} style={imageStyle} /> {/* Display Image */}
-            <h3 style={productTitleStyle}>{product.name}</h3>
-            <p style={descriptionStyle}>{product.description}</p>
-            <p style={priceStyle}>Price: ${product.price}</p>
+            {/* Link to Product Detail Page */}
+            <Link href={/product/${product.id}} passHref>
+              <div>
+                <img src={product.imageUrl} alt={product.name} style={imageStyle} /> {/* Display Image */}
+                <h3 style={productTitleStyle}>{product.name}</h3>
+                <p style={priceStyle}>Price: ${product.price}</p>
+              </div>
+            </Link>
             <button onClick={() => addToCart(product)} style={buttonStyle}>Add to Cart</button>
           </div>
         ))}
@@ -210,10 +215,13 @@ const productCardStyle = {
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   backgroundColor: '#fff',
   transition: 'transform 0.3s',
+  cursor: 'pointer',
 };
 
 const imageStyle = {
   width: '100%',
+  height: '200px',
+  objectFit: 'cover',
   borderRadius: '10px',
 };
 
@@ -221,12 +229,6 @@ const productTitleStyle = {
   marginTop: '10px',
   fontSize: '1.2rem',
   color: '#2c3e50',
-};
-
-const descriptionStyle = {
-  fontSize: '1rem',
-  color: '#7f8c8d',
-  margin: '5px 0',
 };
 
 const priceStyle = {
@@ -285,3 +287,5 @@ const removeButtonStyle = {
   borderRadius: '5px',
   cursor: 'pointer',
 };
+
+export default Home;
