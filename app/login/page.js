@@ -159,9 +159,13 @@ export default function Home() {
 // Styling for the components
 const containerStyle = {
   textAlign: 'center',
-  marginTop: '50px',
+
+  marginTop: '100px',
+  padding: '40px',
+  borderRadius: '10px',
+  width: '400px',
+  margin: 'auto',
   backgroundColor: '#f7f9fc',
-  padding: '20px',
 };
 
 const titleStyle = {
@@ -282,6 +286,7 @@ const cartModalStyle = {
   width: '300px',
   textAlign: 'center',
 };
+
 
 const cartItemStyle = {
   display: 'flex',
