@@ -1,3 +1,9 @@
+'use client';  // Ensure this is a Client Component
+
+import { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase';  // Firebase Firestore reference
+
 const Cart = () => {
     const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
   
