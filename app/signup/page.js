@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../firebase';  
 import { doc, setDoc } from 'firebase/firestore';  
-import Header from '../component/header';
+
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
