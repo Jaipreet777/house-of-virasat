@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';  // Firebase Firestore reference
-import styles from "../cssFiles/header.module.css";// adjust the styles or path as necessary
+import styles from '../cssFiles/header.module.css';// adjust the styles or path as necessary
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
