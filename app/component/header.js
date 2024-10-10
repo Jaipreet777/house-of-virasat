@@ -1,64 +1,88 @@
-'use client';  // Ensure this is a Client Component
 
-import { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase';  // Firebase Firestore reference
-import styles from '../cssFiles/header.module.css';// adjust the styles or path as necessary
+'use client'; // Mark as a Client Component
+
+import { useState } from 'react';
+import { db } from '../../firebase'; // Firebase Firestore reference
+import { collection, addDoc } from 'firebase/firestore';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 
-
-const Header = () => {
+export default function Header() {
   const router = useRouter();
-  const [showCart, setShowCart] = useState(false);
-
-  const handleCartClick = () => {
-    setShowCart(!showCart);
-  };
 
   return (
-    <header className="header">
-      <div className="container">
-        <div className="logo">
+    <header style={headerStyle}>
+      <nav style={navStyle}>
+        <div style={logoContainerStyle}>
           <Link href="/">
-            <a>
-              <Image src="/logo.jpg" alt="House of Virasat" width={100} height={50} />
-            </a>
+            <Image src="/logo.jpg" alt="Logo" width={50} height={50} style={logoStyle} />
           </Link>
         </div>
-        <nav className="nav">
-          <ul>
-            <li>
-              <Link href="/">
-                <a>Home</a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/about">
-                <a>About</a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact">
-                <a>Contact</a>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        <div className="cart">
-          <button onClick={handleCartClick}>
-            <span role="img" aria-label="cart">🛒</span> Cart
-          </button>
-          {showCart && (
-            <div className="cart-dropdown">
-              {/* Cart content will be rendered here */}
-            </div>
-          )}
+        <div style={navLinksStyle}>
+          <Link href="/" style={router.pathname === '/' ? activeLinkStyle : linkStyle}>
+            Home
+          </Link>
+          <Link href="/about" style={router.pathname === '/about' ? activeLinkStyle : linkStyle}>
+            About
+          </Link>
+          <Link href="/contact" style={router.pathname === '/contact' ? activeLinkStyle : linkStyle}>
+            Contact
+          </Link>
+          <Link href="/sign-up" style={router.pathname === '/sign-up' ? activeLinkStyle : linkStyle}>
+            Sign Up
+          </Link>
+          <Link href="/login" style={router.pathname === '/login' ? activeLinkStyle : linkStyle}>
+            Login
+          </Link>
         </div>
-      </div>
+      </nav>
     </header>
   );
+}
+
+const headerStyle = {
+  backgroundColor: '#2c3e50',
+  color: 'white',
+  padding: '10px',
+  textAlign: 'center',
 };
 
-export default Header;
+const navStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  maxWidth: '800px',
+  margin: 'auto',
+};
+
+const logoContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const logoStyle = {
+  cursor: 'pointer',
+};
+
+const navLinksStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+};
+
+const linkStyle = {
+  color: 'white',
+  textDecoration: 'none',
+  padding: '10px',
+  fontSize: '1.2rem',
+  cursor: 'pointer',
+};
+
+const activeLinkStyle = {
+  backgroundColor: '#27ae60',
+  padding: '10px',
+  borderRadius: '5px',
+};
