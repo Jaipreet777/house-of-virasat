@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';  // Firebase Firestore reference
+import Header from "../components/Header";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
