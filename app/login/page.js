@@ -24,6 +24,8 @@ export default function Login() {
   };
 
   return (
+    <div>
+       <Header />
     <div style={containerStyle}>
       <h2 style={titleStyle}>Login</h2>
       <form onSubmit={handleLogin} style={formStyle}>
@@ -45,6 +47,7 @@ export default function Login() {
         /><br />
         <button type="submit" style={buttonStyle}>Login</button>
       </form>
+    </div>
     </div>
   );
 }
