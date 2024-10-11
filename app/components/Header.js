@@ -15,7 +15,7 @@ export default function Header() {
     <header style={headerStyle}>
       <div style={logoContainerStyle}>
         <Link href="/">
-          <Image src="/logo.png" alt="Logo" width={50} height={50} />
+          <Image src="/logo.jpg" alt="Logo" width={50} height={50} />
         </Link>
       </div>
       <nav style={navStyle}>
