@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';  // Use next/navigation for router
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';  // Import your Firebase configuration
+import Header from '../components/Header';// header addition 
 
 export default function Login() {
   const [email, setEmail] = useState('');
