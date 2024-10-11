@@ -1,4 +1,4 @@
-'use client'; 
+'use client';  // Ensure this is a Client Component
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';  
@@ -10,10 +10,13 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [error, setError] = useState(''); // State for handling errors
   const router = useRouter();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
+
     try {
       // Create user with email and password in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -23,7 +26,7 @@ export default function SignUp() {
       await setDoc(doc(db, 'users', user.uid), {
         name: name,
         email: user.email,
-        uid: user.uid,  // You can save the user's UID
+        uid: user.uid,  // Save the user's UID
       });
 
       console.log('Account created and saved in Firestore:', user);
@@ -32,6 +35,7 @@ export default function SignUp() {
       router.push('/home');
     } catch (error) {
       console.error('Error during sign-up:', error.message);
+      setError(error.message); // Display error message to the user
     }
   };
 
@@ -65,10 +69,10 @@ export default function SignUp() {
         /><br />
         <button type="submit" style={buttonStyle}>Create Account</button>
       </form>
+      {error && <p style={errorStyle}>{error}</p>} {/* Display error if any */}
     </div>
   );
 }
-
 
 const containerStyle = {
   textAlign: 'center',
@@ -87,11 +91,9 @@ const titleStyle = {
   marginBottom: '20px',
 };
 
-
 const formStyle = {
   textAlign: 'center',
 };
-
 
 const inputStyle = {
   padding: '10px',
@@ -102,7 +104,6 @@ const inputStyle = {
   border: '1px solid #bdc3c7',  
   backgroundColor: '#ecf0f1',  
 };
-
 
 const buttonStyle = {
   padding: '10px 20px',
@@ -115,8 +116,8 @@ const buttonStyle = {
   transition: 'background-color 0.3s ease',
 };
 
-buttonStyle[':hover'] = {
-  backgroundColor: '#2ecc71',  
+const errorStyle = {
+  color: 'red',
+  marginTop: '10px',
 };
 
-//ref: chatgpt - 'how to set gmail signup with firebase'
