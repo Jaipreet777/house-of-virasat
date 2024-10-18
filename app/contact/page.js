@@ -174,3 +174,5 @@ const iconStyle = {
   height: '20px',
   marginRight: '10px',
 };
+
+// ref: https://www.w3schools.com/howto/howto_css_social_media_buttons.asp
