@@ -1,0 +1,180 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../firebase'; // Firestore reference
+
+export default function ProductReviews({ productId }) {
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState('');
+  const [reviews, setReviews] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    // Fetch existing reviews for the product
+    const fetchReviews = async () => {
+      const q = query(collection(db, 'reviews'), where('productId', '==', productId));
+      const querySnapshot = await getDocs(q);
+      const reviewsArray = [];
+      querySnapshot.forEach((doc) => {
+        reviewsArray.push({ id: doc.id, ...doc.data() });
+      });
+      setReviews(reviewsArray);
+    };
+
+    fetchReviews();
+  }, [productId]);
+
+  const handleRatingClick = (star) => {
+    setRating(star);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!rating || !review) {
+      setErrorMessage('Please provide both a rating and a review.');
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, 'reviews'), {
+        productId,
+        rating,
+        review,
+        timestamp: new Date(),
+      });
+
+      setSuccessMessage('Review added successfully!');
+      setRating(0); // Reset the star rating
+      setReview(''); // Clear the review text
+      setErrorMessage('');
+
+      // Fetch updated reviews
+      const q = query(collection(db, 'reviews'), where('productId', '==', productId));
+      const querySnapshot = await getDocs(q);
+      const reviewsArray = [];
+      querySnapshot.forEach((doc) => {
+        reviewsArray.push({ id: doc.id, ...doc.data() });
+      });
+      setReviews(reviewsArray);
+    } catch (error) {
+      console.error('Error adding review: ', error);
+      setErrorMessage('Failed to add review. Please try again.');
+    }
+  };
+
+  return (
+    <div style={containerStyle}>
+      <h2>Leave a Review</h2>
+      {errorMessage && <p style={errorStyle}>{errorMessage}</p>}
+      {successMessage && <p style={successStyle}>{successMessage}</p>}
+      
+      {/* Star Rating */}
+      <div style={starRatingContainer}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            onClick={() => handleRatingClick(star)}
+            style={star <= rating ? starFilledStyle : starEmptyStyle}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+
+      {/* Review Form */}
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <textarea
+          placeholder="Write your review..."
+          value={review}
+          onChange={(e) => setReview(e.target.value)}
+          style={textareaStyle}
+          required
+        />
+        <button type="submit" style={buttonStyle}>Submit Review</button>
+      </form>
+
+      {/* Display Existing Reviews */}
+      <h3>Reviews:</h3>
+      {reviews.length === 0 ? (
+        <p>No reviews yet.</p>
+      ) : (
+        <ul style={reviewListStyle}>
+          {reviews.map((review) => (
+            <li key={review.id} style={reviewItemStyle}>
+              <p><strong>Rating:</strong> {review.rating} ★</p>
+              <p><strong>Review:</strong> {review.review}</p>
+              <p><small>{new Date(review.timestamp.seconds * 1000).toLocaleString()}</small></p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// Styles for the form and reviews
+const containerStyle = {
+  textAlign: 'center',
+  marginTop: '20px',
+};
+
+const starRatingContainer = {
+  fontSize: '24px',
+  marginBottom: '10px',
+};
+
+const starFilledStyle = {
+  color: '#f39c12',
+  cursor: 'pointer',
+};
+
+const starEmptyStyle = {
+  color: '#ccc',
+  cursor: 'pointer',
+};
+
+const formStyle = {
+  margin: '20px 0',
+};
+
+const textareaStyle = {
+  padding: '10px',
+  width: '300px',
+  height: '100px',
+  borderRadius: '5px',
+  border: '1px solid #ccc',
+  marginBottom: '10px',
+};
+
+const buttonStyle = {
+  padding: '10px 20px',
+  backgroundColor: '#27ae60',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+};
+
+const errorStyle = {
+  color: 'red',
+};
+
+const successStyle = {
+  color: 'green',
+};
+
+const reviewListStyle = {
+  listStyleType: 'none',
+  paddingLeft: 0,
+  marginTop: '20px',
+};
+
+const reviewItemStyle = {
+  marginBottom: '10px',
+  padding: '10px',
+  border: '1px solid #ccc',
+  borderRadius: '5px',
+};
